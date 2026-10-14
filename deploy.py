@@ -429,7 +429,7 @@ def deploy_to_vercel(vercel_token):
             deployment_url = f"https://{data.get('url')}"
             alias_url = f"https://{project_name}.vercel.app"
             print(f"\n=======================================================")
-            print(f"🎉 VERCEL DEPLOYMENT SUCCESSFUL!")
+            print(f"[SUCCESS] VERCEL DEPLOYMENT SUCCESSFUL!")
             print(f"Production URL:  {alias_url}")
             print(f"Deployment URL:  {deployment_url}")
             print(f"Deployment ID:   {data.get('id')}")
