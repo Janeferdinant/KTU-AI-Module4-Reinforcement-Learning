@@ -1,0 +1,482 @@
+=== PAGE 1 ===
+MODULE 4 
+Reinforcement Learning (RL) 
+1.1 What is Reinforcement Learning? 
+Reinforcement Learning (RL) is a type of machine learning in which an agent learns how to 
+make decisions by interacting with an environment and receiving rewards or penalties. 
+The goal is to learn a strategy that maximizes the total reward over time. 
+Example: A robot learns to navigate a room. It receives a positive reward for reaching its 
+destination and a penalty for hitting obstacles. 
+ 
+1.2 Important terms 
+• 
+Agent: The learner that selects actions. 
+• 
+Environment: The external world with which the agent interacts. 
+• 
+State (𝒔): The current situation of the agent. 
+• 
+Action (𝒂): A choice made by the agent. 
+• 
+Reward (𝒓): Feedback indicating how good or bad an outcome is. 
+• 
+Policy (𝝅): A strategy for selecting actions in different states. 
+• 
+Return: The total accumulated reward. 
+• 
+Value function: The expected long-term reward from a state or state-action pair. 
+1.3 Markov Decision Process (MDP) 
+Reinforcement learning is commonly modelled using a Markov Decision Process (MDP). 
+An MDP consists of: 
+1. 𝑆: Set of states. 
+2. 𝐴: Set of actions. 
+
+
+=== PAGE 2 ===
+3. 𝑇(𝑠, 𝑎, 𝑠′): Probability of reaching state 𝑠′from state 𝑠after action 𝑎. 
+4. 𝑅(𝑠, 𝑎, 𝑠′): Reward received during a transition. 
+5. 𝛾: Discount factor, between 0 and 1, controlling the importance of future rewards. 
+The Markov property means that the next state depends on the current state and action, 
+rather than the entire history, assuming the state captures all relevant information. 
+1.4 Discounted return 
+𝐺𝑡= 𝑅𝑡+1 + 𝛾𝑅𝑡+2 + 𝛾2𝑅𝑡+3 + ⋯ 
+ 
+• 
+If 𝛾is close to 0, immediate rewards are emphasized. 
+• 
+If 𝛾is close to 1, future rewards are given more importance. 
+1.5 Types of reinforcement learning 
+Type 
+Main idea 
+Passive RL 
+The policy is fixed; the agent learns how good it is. 
+Active RL 
+The agent chooses actions and learns which are best. 
+Model-based RL 
+Uses or learns a model of the environment. 
+Model-free RL 
+Learns values or policies without explicitly learning the environment's 
+transition model. 
+ 
+Key point: The difference between passive and active reinforcement learning is whether the 
+agent follows a fixed policy or actively chooses actions to improve its behavior. 
+2. Passive Reinforcement Learning 
+2.1 Definition 
+In passive reinforcement learning, the agent follows a given, fixed policy and learns the 
+utility or value of the states it visits. 
+The agent does not decide which policy is best. It evaluates the policy it has been given. 
+Example: A delivery robot follows a predetermined route and learns the expected reward 
+associated with each location. 
+ 
+
+
+=== PAGE 3 ===
+2.2 Main approaches 
+A. Direct utility estimation 
+• 
+The agent observes the rewards obtained during an episode. 
+• 
+It calculates the total return for each visited state. 
+• 
+It averages the observed returns to estimate the utility of each state. 
+• 
+Direct utility estimation succeeds in reducing the reinforcement learning problem to 
+an inductive learning problem, about which much is known.  
+• 
+The utility of each state equals its own reward plus the expected utility of its 
+successor states. That is, the utility values obey the Bellman equations for a fixed 
+policy. 
+For state 𝑠: 
+ 
+where γ is discount factor. 
+Advantages: Simple and easy to implement. 
+Limitations: Requires sufficient experience and can have high variance. 
+B. Adaptive dynamic programming (ADP) 
+ADP learns a model of the environment and uses it to calculate state utilities. 
+The agent estimates: 
+• 
+Transition probabilities. 
+• 
+Expected rewards. 
+Advantages: Can make effective use of a learned model. 
+Limitations: Requires model estimation and may be computationally expensive for large 
+state spaces. 
+C. Temporal-difference (TD) learning 
+• TD learning updates a state's estimated utility using the reward received and the 
+estimated utility of the next state. 
+• When a transition occurs from state s to state𝑠′ we apply the following update to 
+Uπ(s):Type equation here. 
+ 
+
+
+=== PAGE 4 ===
+where: 
+• 
+𝛼= learning rate. 
+• 
+𝑅= observed reward. 
+• 
+𝑠′= next state. 
+• 
+𝛾= discount factor. 
+The expression 
+𝑅(𝑠) + 𝛾𝑈(𝑠′) −𝑈(𝑠) 
+ 
+is the difference in utilities between successive states, it is often called the temporal-
+difference, or TD equation. 
+Advantages: Learns directly from experience without requiring a complete model. 
+Limitations: Estimates may be inaccurate when experience is limited. 
+2.3 Comparison of passive RL methods 
+Method 
+Learns from 
+Needs an 
+environment 
+model? 
+Direct utility estimation 
+Complete observed returns 
+No 
+ADP 
+Learned transition and reward model 
+Yes, or an estimated 
+model 
+TD learning 
+Immediate reward and next-state estimate No 
+ 
+3. Active Reinforcement Learning 
+3.1 Definition 
+In active reinforcement learning, the agent chooses actions, observes their results, and 
+learns which actions produce the highest long-term reward. 
+Unlike passive RL, the agent must learn both: 
+• 
+How good the current states and actions are. 
+• 
+Which actions it should choose to improve its performance. 
+
+
+=== PAGE 5 ===
+Example: A robot explores different routes to discover which route reaches its destination 
+safely and quickly. 
+3.2 Main concepts 
+1. Exploration: Trying actions to gain new information about the environment. 
+2. Exploitation: Choosing the action currently believed to be the best. 
+A good RL agent must balance exploration and exploitation. 
+3.3 Q-learning (Off Policy RL) 
+Q-learning is a widely used model-free, off-policy reinforcement learning algorithm. 
+It learns the action-value function 𝑄(𝑠, 𝑎), which represents the expected discounted return 
+from taking action 𝑎 in state 𝑠and then following the best policy. 
+The update equation is: 
+𝑄(𝑠, 𝑎) ←𝑄(𝑠, 𝑎) + 𝛼[𝑅(𝑠) + 𝛾max
+𝑎′ 𝑄(𝑠′, 𝑎′)
+−𝑄(𝑠, 𝑎)]
+ 
+ 
+where: 
+• 
+𝑄(𝑠, 𝑎): Current estimate of action value. 
+• 
+𝛼: Learning rate. 
+• 
+𝑟: Immediate reward. 
+• 
+𝛾: Discount factor. 
+• 
+𝑠′: Next state. 
+• 
+max𝑎′𝑄(𝑠′, 𝑎′): Highest estimated value of the next state's available actions. 
+How Q-learning works: 
+1. Initialize the Q-values. 
+2. Observe the current state 𝑠. 
+3. Choose an action 𝑎, allowing exploration. 
+4. Perform the action and observe reward 𝑟and next state 𝑠′. 
+5. Update 𝑄(𝑠, 𝑎)using the Q-learning equation. 
+6. Repeat until the values or learned behaviour become sufficiently stable. 
+The learned policy usually chooses, 
+
+
+=== PAGE 6 ===
+𝜋(𝑠) = arg max
+𝑎
+𝑄(𝑠, 𝑎) 
+ 
+3.4 SARSA (On-Policy Algorithm): 
+SARSA stands for State-Action-Reward-State-Action, representing the tuple (s, a, r, s', a'). 
+Unlike Q-learning, SARSA is an on-policy method. Its update rule relies on the actual next 
+action a' selected by the agent's current behavioural policy: 
+Q(s, a) ← Q(s, a) + α [ R(s, a) + γ Q(s', a') - Q(s, a) ] 
+SARSA takes exploration risks into account during training, making it safer in environments 
+where exploratory actions carry high penalties or costs. 
+3.5 Passive RL vs Active RL 
+Passive RL 
+Active RL 
+Follows a fixed policy 
+Selects actions to improve its behaviour 
+Evaluates a policy 
+Learns to select a good policy 
+Focuses on state utility under that policy 
+Often learns action values 
+No policy exploration is required 
+Exploration is generally important 
+ 
+4. Generalization in Reinforcement Learning 
+4.1 Definition 
+Generalization is the ability of a reinforcement learning agent to apply what it has learned in 
+familiar states to new or previously unseen states. 
+In large problems, it is usually impossible to store a separate value for every state-action 
+pair. Generalization helps the agent learn from limited experience. 
+Example: A robot trained to navigate several rooms can use the knowledge it has acquired to 
+navigate a new room with a similar layout. 
+4.2 Why is generalization needed? 
+• 
+Real-world environments can have enormous state spaces. 
+• 
+Many states may never be visited during training. 
+• 
+Learning a separate value for every state is expensive. 
+• 
+Similar states may require similar actions. 
+
+
+=== PAGE 7 ===
+4.3 Methods of generalization 
+A. Feature-based representation 
+Represent each state using useful features rather than treating every state as completely 
+different. 
+For example, a self-driving robot might use: 
+• 
+Distance to an obstacle. 
+• 
+Current speed. 
+• 
+Distance to the destination. 
+• 
+Direction of movement. 
+A value function can then be approximated as 
+𝑈̂(𝑠) = 𝑤𝑇𝑥(𝑠) 
+ 
+where 𝑥(𝑠)is the feature vector and 𝑤 is a vector of learned weights. 
+B. Function approximation 
+A parameterized function approximates state values or action values. 
+Examples include: 
+• 
+Linear models. 
+• 
+Decision trees. 
+• 
+Neural networks. 
+For example, 
+𝑄̂(𝑠, 𝑎, 𝑤) ≈𝑄(𝑠, 𝑎) 
+ 
+A neural network can learn complex relationships between states and actions. 
+C. State abstraction 
+Similar states are grouped together when their relevant behaviour can be represented by a 
+common abstract state. 
+For example, different positions on a map might be grouped into the same region if they 
+have similar rewards and action outcomes. 
+4.4 Advantages and limitations 
+
+
+=== PAGE 8 ===
+Advantages 
+Limitations 
+Reduces memory requirements 
+Poor features can produce poor decisions 
+Helps with unseen states 
+Incorrect generalization may be misleading 
+Supports large problems 
+Function approximation may be difficult to train 
+Can improve learning efficiency 
+Training data may not cover important situations 
+ 
+5. Policy Search 
+Policy search is an approach to reinforcement learning that directly searches for a policy that 
+maximizes expected cumulative reward. 
+Instead of first learning an accurate value function for every state, policy search adjusts the 
+policy's parameters to improve performance. 
+A policy may be represented as 
+𝜋𝜃(𝑠, 𝑎) 
+ 
+where 𝜃represents the policy parameters. 
+5.2 Types of policy search 
+1. Direct policy search 
+• 
+Define a parameterized policy. 
+• 
+Evaluate its performance through interaction or simulation. 
+• 
+Adjust parameters to improve the total reward. 
+2. Gradient-based policy search 
+Uses policy gradients to improve the policy parameters: 
+
+
+=== PAGE 9 ===
+𝜃←𝜃+ 𝛼∇𝜃𝐽(𝜃) 
+ 
+Here, ∇𝜃𝐽(𝜃)indicates the direction in parameter space that locally increases expected 
+reward. 
+3. Stochastic policy search 
+The policy selects actions according to probabilities rather than always choosing the same 
+action in a given state. This can help exploration and handle uncertainty. 
+5.3 General procedure 
+1. Choose a policy representation with parameters 𝜃. 
+2. Execute the policy in the environment or a simulator. 
+3. Measure the cumulative reward. 
+4. Adjust the parameters to improve expected performance. 
+5. Repeat until a satisfactory policy is found. 
+5.4 Advantages 
+• 
+Directly optimizes the behaviour of the agent. 
+• 
+Can naturally handle continuous action spaces. 
+• 
+Can represent complex policies, including neural-network policies. 
+• 
+Does not always require explicit value-function estimation. 
+5.5 Limitations 
+• 
+Evaluating a policy may require many trials. 
+• 
+Performance estimates can be noisy. 
+• 
+Optimization may find a local optimum rather than the global optimum. 
+• 
+Training can be computationally expensive. 
+5.6 Policy search versus value-based learning 
+Policy search 
+Value-based learning 
+Directly optimizes the policy 
+Learns values of states or actions 
+Useful for continuous actions and complex 
+policies 
+Convenient for discrete action selection 
+
+
+=== PAGE 10 ===
+Often uses policy optimization or gradients Often selects the action with the highest 
+estimated value 
+Can require many policy evaluations 
+Can also be expensive, depending on the 
+problem 
+ 
+6. Apprenticeship Learning and Inverse Reinforcement Learning 
+6.1 Apprenticeship learning 
+Apprenticeship learning is a method in which an agent learns to perform a task by observing 
+demonstrations from an expert. 
+Instead of learning entirely through trial and error, the agent uses expert behavior as 
+guidance. 
+Example: A robot observes a human moving objects and learns to perform a similar task. 
+Typical steps: 
+1. Collect expert demonstrations. 
+2. Identify patterns in the expert's behavior. 
+3. Learn a policy or infer the objective behind the behavior. 
+4. Evaluate the learned behavior. 
+5. Improve it using additional demonstrations or interaction. 
+6.2 Inverse Reinforcement Learning (IRL) 
+Inverse Reinforcement Learning attempts to infer the reward function that explains an 
+expert's behavior. 
+In ordinary reinforcement learning, the reward function is given or specified. In IRL, the 
+agent observes expert behavior and tries to determine what the expert is trying to achieve. 
+For example: 
+• 
+Expert behavior: A driver slows down near pedestrians. 
+• 
+Possible inferred reward: Avoid collisions and maintain safety. 
+• 
+Learned policy: Drive cautiously when pedestrians are nearby. 
+The inferred reward is not necessarily unique; several reward functions may explain the 
+same behavior. 
+6.3 
+
+
+=== PAGE 11 ===
+ 
+6.4 Apprenticeship learning versus IRL 
+Apprenticeship learning 
+Inverse reinforcement learning 
+Broad approach to learning from expert 
+demonstrations 
+Specific approach that infers the reward 
+function 
+May directly imitate expert actions 
+Attempts to discover the expert's underlying 
+objective 
+Can use imitation learning or IRL 
+Uses expert behavior to estimate rewards 
+Focuses on acquiring expert-like behavior 
+Focuses on identifying the reward that 
+explains behavior 
+ 
+6.5 Advantages and limitations 
+Advantages 
+• 
+Reduces the need for random exploration. 
+• 
+Can use human knowledge to guide learning. 
+• 
+Useful when manually defining a reward function is difficult. 
+• 
+Can support complex tasks where the objective is easier to demonstrate than to 
+describe. 
+
+
+=== PAGE 12 ===
+Limitations 
+• 
+Expert demonstrations may be incomplete or imperfect. 
+• 
+Demonstrations can be expensive to collect. 
+• 
+The intended reward may be ambiguous. 
+• 
+Learned behavior may not generalize to situations absent from the demonstrations. 
+7. Applications of Reinforcement Learning 
+Reinforcement learning is useful when actions influence future outcomes and the agent can 
+improve through feedback. 
+1. Robotics and automation 
+Robots learn movement, object manipulation, path planning, and control strategies. 
+Example: A robotic arm learns how to pick and place objects accurately. 
+2. Autonomous vehicles 
+RL can help optimize simulated driving policies, lane changes, and traffic responses. 
+Example: Learning a policy that balances smooth driving and safe following distances. 
+3. Games 
+Agents learn strategies through rewards, simulations, and repeated play. 
+Example: Learning strong strategies in chess or other games. 
+4. Power systems and energy management 
+RL can optimize energy storage, building energy use, and resource allocation. 
+Example: Scheduling battery charging to reduce electricity costs while meeting operational 
+constraints. 
+ 
+5. Computer networks 
+RL can support routing, congestion management, and allocation of network resources. 
+Example: Selecting routing policies that reduce delay and congestion. 
+ 
+6. Healthcare 
+RL research explores sequential treatment decisions and resource scheduling. 
+Example: Optimizing treatment strategies under carefully validated clinical constraints. 
+
+
+=== PAGE 13 ===
+Benefits of reinforcement learning 
+• 
+Learns from interaction and feedback. 
+• 
+Optimizes long-term outcomes. 
+• 
+Can adapt to changing environments. 
+• 
+Can handle sequential decision-making problems. 
+• 
+Can discover strategies that are difficult to program manually. 
+Challenges in real-world applications 
+• 
+Requires sufficient and useful training experience. 
+• 
+Exploration can be costly or unsafe. 
+• 
+Poorly designed rewards can produce undesirable behavior. 
+• 
+Results may not transfer from simulation to the real world. 
+• 
+Safety, reliability, and computational cost must be considered. 
+For engineering applications, RL is often trained in simulation and evaluated under strict 
+constraints before deployment in physical systems. 
+ 
